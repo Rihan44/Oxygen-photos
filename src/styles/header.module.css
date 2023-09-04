@@ -1,0 +1,61 @@
+@media (min-width: 375px) and (max-width: 1000px) {
+    header.head{
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid white;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0px 5px 5px rgb(175, 175, 175);
+        position: fixed;
+        background: #FFFF;
+        z-index: 1;
+    }
+
+    img.logo {
+        width: 70%;
+        margin-top: 15px;
+    }
+
+    .headerInputs {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 90%;
+        margin-bottom: 25px;
+        margin-top: 25px;
+        align-items: center;
+    }
+
+    .searchs {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .filters {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .favs {
+        margin-left: 25px;
+    }
+
+    .form {
+        width: 25%;
+    }
+
+    .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+        height: 5px;
+    }
+
+    .textField {
+        width: 50%;
+    }
+}

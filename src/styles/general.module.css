@@ -1,0 +1,93 @@
+@media (min-width: 375px) and (max-width: 1000px) {
+    .title {
+        color: #998CB5;
+        font-size: 2em;
+        text-align: center;
+    }
+
+    .main {
+        padding-top: 290px;
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    .photosMain {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .photoBox {
+        width: 90%;
+        margin: 20px;
+        height: 280px;
+        margin-bottom: 80px;
+    }
+
+    .photoBox img {
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+    }
+
+    .alertContainer {
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .modalMain {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .modalInfo {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modalInfoBox {
+        width: 100%;
+        height: 33px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    
+
+    .photoBox .buttons {
+        width: 100%;
+        height: 40px;
+        background: #F2E2DE;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .photoBox .buttons button {
+        margin-left: 20px;
+        margin-right: 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    .imgModal {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+    }
+
+}
