@@ -1,40 +1,58 @@
 import Title from './Title.jsx';
 import styles from '../styles/general.module.css';
+
 import DownloadIcon from '@mui/icons-material/Download';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import Alert from '@mui/material/Alert';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import { Collapse } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import HeightIcon from '@mui/icons-material/Height';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
-const Home = () => {
+import { useEffect, useState } from 'react';
+import { useDispatch,useSelector} from 'react-redux';
+import { getPhotos } from '../features/searchSlice.js';
+import { favorites } from '../features/favoriteSlice.js';
 
-    const navigation = useNavigate();
+
+const Home = () => {
     const [open, setOpen] = useState(false);
-    const [modalInfo, setModalInfo] = useState(''); /* pasarle un objeto en su momento */
+    const [modalInfo, setModalInfo] = useState({}); 
     const [openAlert, setOpenAlert] = useState(false);
     const [favoriteImages, setFavoriteImages] = useState({});
+    const[btnDesactivado, setBtnDesactivado] = useState(false);
+    let contador = 0;
+    const dispatch = useDispatch();
+    const dataPhotos = useSelector((state) => state.search.data)
 
-    const handleToggleFavorite = (photo) => {
-        /* TODO QUE SI LE DOY OTRA VEZ NO SALGA EL ALERT */
+    useEffect(() => {
+        if (dataPhotos.length === 0) {
+            dispatch(getPhotos());
+        }
+
+    }, [dataPhotos.length, dispatch]);
+
+
+    const handleToggleFavorite = (photo, index) => {
+        setBtnDesactivado(true);
         setOpenAlert(true);
         setFavoriteImages((prevFavorites) => {
             return {
                 ...prevFavorites,
-                [photo]: !prevFavorites[photo]
+                [photo.urls.raw]: !prevFavorites[photo.urls.raw]
             };
         });
-        /* AQUI VA EL DISPATCH DE AÑADIR A FAVS */
+
+        let btnFav = document.getElementsByClassName('btnFav');
+        btnFav[index].setAttribute("disabled", btnDesactivado);
+        dispatch(favorites(photo, 'favorites/addPhoto'));
+
     };
 
     const handleOpen = (info) => {
@@ -44,16 +62,13 @@ const Home = () => {
 
     const handleClose = () => setOpen(false);
 
-    const srcs = [
-        '/image-prueba.jpeg',
-        '/image-prueba2.jpg',
-        '/image-prueba3.jpg',
-        '/image-prueba4.jpg'
-    ]
-
     const handleDownload = (src) => {
-        /* QUE SE DESCARGUE LA IMAGEN */
         console.log(src);
+        const link = document.createElement('a');
+        link.href = src.links.download;
+        link.download = 'imageUnplash.png';
+        link.target = '_blank';
+        link.click();
     }
 
     const styleModal = {
@@ -62,7 +77,7 @@ const Home = () => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 250,
-        height: 350,
+        height: 'auto',
         bgcolor: '#F2E2DE',
         color: '#EB3223',
         border: '1px solid #000',
@@ -81,7 +96,6 @@ const Home = () => {
     return (
         <main className={styles.main}>
             <Title title="Home" styles={styles.title} />
-            {/* el component de cada photo que viene del servidor */}
             <div className={styles.photosMain}>
                 <Modal
                     open={open}
@@ -90,27 +104,27 @@ const Home = () => {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={styleModal}>
-                        <img className={styles.imgModal} src={modalInfo} alt='image'/>
                         <div className={styles.modalMain}>
+                            <img className={styles.imgModal} src={modalInfo.urls?.raw} alt='image_data'/>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Titulo de la imagen
+                                {modalInfo.alt_description}
                             </Typography>
                             <div className={styles.modalInfo}>
                                 <div className={styles.modalInfoBox}>
                                     <HeightIcon fontSize="medium"/>
-                                    <p>250px</p>
+                                    <p>{modalInfo.height}px</p>
                                 </div>
                                 <div className={styles.modalInfoBox}>
                                     <SyncAltIcon fontSize="medium"/>
-                                    <p>350px</p>
+                                    <p>{modalInfo.width}px</p>
                                 </div>
-                                <div className={styles.modalInfoBox}>
+                                <div style={{marginRight: '20px'}} className={styles.modalInfoBox}>
                                     <FavoriteIcon fontSize="medium"/>
-                                    <p>2.5M</p>
+                                    <p>{modalInfo.likes}</p>
                                 </div>
                                 <div className={styles.modalInfoBox}>
                                     <DateRangeIcon style={{marginLeft: '15px'}} fontSize="medium"/>
-                                    <p>20/09/22</p>
+                                    <p>{modalInfo.updated_at?.split('T')[0]}</p>
                                 </div>
                             </div>
                         </div>
@@ -125,28 +139,27 @@ const Home = () => {
                         >Added to favs!
                     </Alert>
                 </Snackbar>
-
-                {srcs.map((photo) => {
-                    const isFavorite = favoriteImages[photo];
+               {dataPhotos.map((data, index) => {
+                    const isFavorite = favoriteImages[data.urls.raw];
                     return (
-                        <div key={photo} className={styles.photoBox}>
-                            <img src={photo} alt='image' />
+                        <div key={data.id + contador++} className={styles.photoBox}>
+                            <img src={data.urls.raw} alt='image_Data' />
                             <div className={styles.alertContainer}>
-                                {/*  */}
+                               
                             </div>
                             <div className={styles.buttons}>
-                                <button onClick={() => handleDownload(photo)}>
+                                <button onClick={() => handleDownload(data)}>
                                     <DownloadIcon color="error" fontSize="medium" />
                                 </button>
                                 <div>
-                                    <button onClick={() => handleToggleFavorite(photo)}>
+                                    <button className='btnFav' onClick={() => handleToggleFavorite(data, index)}>
                                         {
                                         isFavorite 
                                             ? <BookmarkIcon color='error' fontSize="medium" /> 
                                             : <BookmarkBorderIcon color='error' fontSize="medium" />
                                         }
                                     </button>
-                                    <button onClick={() => handleOpen(photo)}>
+                                    <button onClick={() => handleOpen(data)}>
                                         <ZoomOutMapIcon color='error' fontSize="medium" />
                                     </button>
                                 </div>
