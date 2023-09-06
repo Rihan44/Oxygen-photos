@@ -18,7 +18,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector} from 'react-redux';
 import { getPhotos } from '../features/searchSlice.js';
-import { favorites } from '../features/favoriteSlice.js';
+import { addPhoto } from '../features/favoriteSlice.js';
 
 
 const Home = () => {
@@ -26,10 +26,14 @@ const Home = () => {
     const [modalInfo, setModalInfo] = useState({}); 
     const [openAlert, setOpenAlert] = useState(false);
     const [favoriteImages, setFavoriteImages] = useState({});
-    const[btnDesactivado, setBtnDesactivado] = useState(false);
-    let contador = 0;
+
     const dispatch = useDispatch();
-    const dataPhotos = useSelector((state) => state.search.data)
+    const dataPhotos = useSelector((state) => state.search.data);
+    const localFavs = localStorage.getItem('favs');
+    const parseFavs = JSON.parse(localFavs) || '';
+
+    let contador = 0;
+
 
     useEffect(() => {
         if (dataPhotos.length === 0) {
@@ -40,19 +44,21 @@ const Home = () => {
 
 
     const handleToggleFavorite = (photo, index) => {
-        setBtnDesactivado(true);
+        /* TODO GUARDAR FECHA DE CUANDO SE DA FAVORITO */
         setOpenAlert(true);
-        setFavoriteImages((prevFavorites) => {
+        const updatedFavoriteImages = ((prevFavorites) => {
             return {
                 ...prevFavorites,
                 [photo.urls.raw]: !prevFavorites[photo.urls.raw]
             };
         });
 
-        let btnFav = document.getElementsByClassName('btnFav');
-        btnFav[index].setAttribute("disabled", btnDesactivado);
-        dispatch(favorites(photo, 'favorites/addPhoto'));
+        setFavoriteImages(updatedFavoriteImages);
 
+        let btnFav = document.getElementsByClassName('btnFav');
+        btnFav[index].setAttribute("disabled", updatedFavoriteImages[photo.urls.raw]);
+
+        dispatch(addPhoto(photo,'favorites/addPhotos'));
     };
 
     const handleOpen = (info) => {
@@ -63,7 +69,6 @@ const Home = () => {
     const handleClose = () => setOpen(false);
 
     const handleDownload = (src) => {
-        console.log(src);
         const link = document.createElement('a');
         link.href = src.links.download;
         link.download = 'imageUnplash.png';
@@ -144,19 +149,18 @@ const Home = () => {
                     return (
                         <div key={data.id + contador++} className={styles.photoBox}>
                             <img src={data.urls.raw} alt='image_Data' />
-                            <div className={styles.alertContainer}>
-                               
-                            </div>
                             <div className={styles.buttons}>
                                 <button onClick={() => handleDownload(data)}>
                                     <DownloadIcon color="error" fontSize="medium" />
                                 </button>
                                 <div>
-                                    <button className='btnFav' onClick={() => handleToggleFavorite(data, index)}>
+                                    <button className='btnFav' onClick={() => handleToggleFavorite(data, index)} disabled={parseFavs[index]?.id === data.id}>
                                         {
-                                        isFavorite 
-                                            ? <BookmarkIcon color='error' fontSize="medium" /> 
-                                            : <BookmarkBorderIcon color='error' fontSize="medium" />
+                                        parseFavs[index]?.id === data.id 
+                                            ? (<BookmarkIcon color='error' fontSize="medium" /> ) 
+                                            : isFavorite 
+                                                ? <BookmarkIcon color='error' fontSize="medium" /> 
+                                                : <BookmarkBorderIcon color='error' fontSize="medium" />
                                         }
                                     </button>
                                     <button onClick={() => handleOpen(data)}>
