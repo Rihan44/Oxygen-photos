@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const local = JSON.parse(localStorage.getItem('favs')) || [];     
 
 const initalState = {
     data: JSON.parse(localStorage.getItem('favs')) || [],
@@ -12,9 +13,10 @@ export const favoriteSlice = createSlice({
     reducers: {
         addPhoto: (state, action) => {
             if(action.type === 'favorites/addPhoto') {       
-                localStorage.setItem('favs', JSON.stringify(state.data));
-                state.status = 'fullfilled';
                 state.data = [...state.data, action.payload];
+                local.push(action.payload);       
+                localStorage.setItem('favs', JSON.stringify(local)); 
+                state.status = 'fullfilled';
             } else {
                 state.status = "rejected";
             }
@@ -22,10 +24,15 @@ export const favoriteSlice = createSlice({
 
         removePhoto: (state, action) => {
             if(action.type === 'favorites/removePhoto') {
-                state.data.filter((id) => id === state.data.pop(id));
+                const {id, index} = action.payload;
+                state.data = state.data.filter(item => item.id !== id);
+                
+                /* TODO COMPROBAR ESTO BIEN */
+                /* const updateLocal = local.filter(item => item.id !== id);
+                localStorage.setItem('favs', JSON.stringify(updateLocal)); */
             }
         }
     }
 })
 
-export const {addPhoto} = favoriteSlice.actions;
+export const {addPhoto, removePhoto} = favoriteSlice.actions;

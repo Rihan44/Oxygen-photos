@@ -30,7 +30,7 @@ const Home = () => {
     const dispatch = useDispatch();
     const dataPhotos = useSelector((state) => state.search.data);
     const localFavs = localStorage.getItem('favs');
-    const parseFavs = JSON.parse(localFavs) || '';
+    const parseFavs = JSON.parse(localFavs) || [];
 
     let contador = 0;
 
@@ -145,6 +145,7 @@ const Home = () => {
                     </Alert>
                 </Snackbar>
                {dataPhotos.map((data, index) => {
+                    const favControler = parseFavs?.some(fav => fav.id === data.id);
                     const isFavorite = favoriteImages[data.urls.raw];
                     return (
                         <div key={data.id + contador++} className={styles.photoBox}>
@@ -154,9 +155,9 @@ const Home = () => {
                                     <DownloadIcon color="error" fontSize="medium" />
                                 </button>
                                 <div>
-                                    <button className='btnFav' onClick={() => handleToggleFavorite(data, index)} disabled={parseFavs[index]?.id === data.id}>
+                                    <button className='btnFav' onClick={() => handleToggleFavorite(data, index)} disabled={favControler}>
                                         {
-                                        parseFavs[index]?.id === data.id 
+                                            favControler
                                             ? (<BookmarkIcon color='error' fontSize="medium" /> ) 
                                             : isFavorite 
                                                 ? <BookmarkIcon color='error' fontSize="medium" /> 

@@ -15,7 +15,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import Alert from '@mui/material/Alert';
 
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removePhoto } from "../features/favoriteSlice";
 
 const MyFavs = () => {
 
@@ -23,6 +24,8 @@ const MyFavs = () => {
     const [open, setOpen] = useState(false);
     const [modalInfo, setModalInfo] = useState({});
     const [openAlert, setOpenAlert] = useState(false);
+
+    const dispatch = useDispatch();
     const dataFav = useSelector((state) => state.favorites.data);
 
     let contador = 0;
@@ -33,11 +36,11 @@ const MyFavs = () => {
         }
     }, [dataFav])
 
-    const handleFav = (photo) => {
-        /* TODO QUE SI LE DOY OTRA VEZ NO SALGA EL ALERT */
+    const handleFav = (photo, index) => {
+        /* TODO AL BORRAR QUE SE BORRE DEL LOCAL */
         setOpenAlert(true);
-
-        /* AQUI VA EL DISPATCH DE QUITAR DE FAVS */
+        const info = {id: photo.id, index: index};
+        dispatch(removePhoto(info), 'favorites/removePhoto');
     };
 
     const handleOpen = (info) => {
@@ -117,7 +120,7 @@ const MyFavs = () => {
                     </Alert>
                 </Snackbar>
             {data
-                ? dataFav.map((dataPhoto) => {
+                ? dataFav?.map((dataPhoto, index) => {
                         return (
                             <div key={dataPhoto.id + contador++} className={styles.photoBox}>
                                 <img src={dataPhoto.urls.raw} alt='image_fav' />
@@ -126,7 +129,7 @@ const MyFavs = () => {
                                         <DownloadIcon color="error" fontSize="medium" />
                                     </button>
                                     <div>
-                                        <button onClick={() => handleFav(dataPhoto)}>
+                                        <button onClick={() => handleFav(dataPhoto, index)}>
                                             <BookmarkIcon color='error' fontSize="medium" /> 
                                         </button>
                                         <button onClick={() => handleOpen(dataPhoto)}>
