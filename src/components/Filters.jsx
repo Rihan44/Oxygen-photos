@@ -10,7 +10,6 @@ import FormControl from '@mui/material/FormControl';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import styles from '../styles/header.module.css';
 
-
 const Filters = () => {
 
     const[filters, setFilter] = useState('');

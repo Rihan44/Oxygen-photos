@@ -93,10 +93,10 @@ const MyFavs = () => {
     };
 
     const alertStyle = {
-        width: '50%',
+        width: '70%',
         position: 'absolute',
         top: '-300px',
-        left: '20%'
+        left: '10%'
     }
 
     return(
@@ -109,7 +109,7 @@ const MyFavs = () => {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <Box sx={styleModal}>
+                    <Box className={styles.styleModalBox}>
                         <div className={styles.modalMain}>
                                 <img className={styles.imgModal} src={modalInfo.url} alt='image_data'/>
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -146,7 +146,7 @@ const MyFavs = () => {
                             </div>
                     </Box>
                 </Modal>
-                <Snackbar open={openAlert} autoHideDuration={1000} onClose={handleClose}>
+                <Snackbar style={{width: '100%'}} open={openAlert} autoHideDuration={1000} onClose={handleClose}>
                     <Alert
                         sx={alertStyle}
                         severity="success"

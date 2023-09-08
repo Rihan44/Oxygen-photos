@@ -1,5 +1,6 @@
 @media (min-width: 375px) and (max-width: 1000px) {
-    header.head{
+    .head{
+        width: 100%;
         display: flex;
         flex-direction: column;
         border-bottom: 1px solid white;
@@ -57,5 +58,65 @@
 
     .textField {
         width: 50%;
+    }
+}
+
+@media (min-width: 1000px){
+    .head{
+        width: 100%;
+        display: flex;
+        border-bottom: 1px solid white;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        box-shadow: 0px 5px 5px rgb(175, 175, 175);
+        position: fixed;
+        background: #FFFF;
+        z-index: 1;
+    }
+
+    img.logo {
+        width: 70%;
+    }
+
+    .headerInputs {
+        display: flex;
+        justify-content: center;
+        width: 80%;
+        margin-bottom: 25px;
+        margin-top: 25px;
+        align-items: center;
+    }
+
+    .searchs {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .filters {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .favs {
+        margin-left: 15px;
+    }
+
+    .form {
+        width: 50%;
+    }
+
+    .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+        height: 15px;
+    }
+
+    .textField {
+        width: 100%;
     }
 }

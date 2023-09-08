@@ -9,7 +9,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Filters from "./Filters";
 
-
 const Header = () => {
     const[search, setSearch] = useState('');
     const dispatch = useDispatch();

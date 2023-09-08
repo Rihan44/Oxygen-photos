@@ -4,10 +4,6 @@ import { getAllPhotos, getPhotosByQuery } from "./searchThunk";
 export const searchSlice = createSlice({
     name: "search",
     initialState: {
-        /* data: {
-            getAllPhoto: [],
-            getByQuery: []
-        }, */
         data: [],
         status: 'idle',
         error: null

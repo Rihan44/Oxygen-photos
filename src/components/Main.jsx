@@ -20,7 +20,6 @@ import { useDispatch,useSelector} from 'react-redux';
 import { getPhotos } from "../features/search/searchSlice";
 import { addPhoto } from '../features/favorites/favoriteSlice.js';
 
-
 const Home = () => {
     const[open, setOpen] = useState(false);
     const[modalInfo, setModalInfo] = useState({}); 
@@ -98,21 +97,6 @@ const Home = () => {
         link.click();
     }
 
-    const styleModal = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 250,
-        height: 'auto',
-        bgcolor: '#F2E2DE',
-        color: '#EB3223',
-        border: '1px solid #000',
-        borderRadius: '10px',
-        boxShadow: 24,
-        p: 4,
-    };
-
     const alertStyle = {
         width: '50%',
         position: 'absolute',
@@ -130,7 +114,7 @@ const Home = () => {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <Box sx={styleModal}>
+                    <Box className={styles.styleModalBox}>
                         <div className={styles.modalMain}>
                             <img className={styles.imgModal} src={modalInfo.urls?.raw} alt='image_data'/>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -157,7 +141,7 @@ const Home = () => {
                         </div>
                     </Box>
                 </Modal>
-                <Snackbar open={openAlert} autoHideDuration={1000} onClose={handleClose}>
+                <Snackbar style={{width: '100%'}} open={openAlert} autoHideDuration={1000} onClose={handleClose}>
                     <Alert
                         sx={alertStyle}
                         severity="success"
