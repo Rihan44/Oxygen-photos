@@ -24,15 +24,13 @@ export const favoriteSlice = createSlice({
             }
         },
         removePhoto: (state, action) => {
-            if(action.type === 'favorites/removePhoto') {
                 const local = JSON.parse(localStorage.getItem('favs')) || []; 
                 const {id} = action.payload;
-                state.data.dataFav = state.data.dataFav.filter(item => item.id !== id);
+
                 localStorage.setItem('favs', JSON.stringify(local.filter(item => item.id !== id)));
-            }
+                state.data.dataFav = state.data.dataFav.filter(item => item.id !== id);
         },
         changeDescription: (state, action) => {
-            if (action.type === 'favorites/changeDescription') {
                 const { id, alt_description } = action.payload;
                 
                 state.data.dataFav = state.data.dataFav.map(item => {
@@ -54,21 +52,16 @@ export const favoriteSlice = createSlice({
                         return item;
                     }
                 });
-            }
         },
         searchFavorites: (state, action) =>{
-            if(action.type === 'favorites/searchFavorites'){
-                /* ESTO HACE QUE NO SE ACTUALICE BIEN EL STATE */
                state.data.dataFavSearch = state.data.dataFav.filter(
                     photo => photo.alt_description.toLowerCase().includes(action.payload.toLowerCase())
                 );
 
                 state.status = 'fulfilled';
-            }
         },
         filter: (state, action) => {
-            if(action.type === 'favorites/filter'){
-                
+
                 switch (action.payload) {
                     case 'date':
                         state.data.dataFavSearch = [...state.data.dataFav]; 
@@ -88,7 +81,6 @@ export const favoriteSlice = createSlice({
                 }
         
                 state.status = 'fulfilled';
-            }
         }
     }
 })

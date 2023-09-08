@@ -37,6 +37,7 @@ const MyFavs = () => {
         return value;
     });
 
+    console.log(dataFav);
 
     let contador = 0;
 
@@ -59,7 +60,7 @@ const MyFavs = () => {
         setOpenAlert(true);
         const info = {id: photo.id};
 
-        dispatch(removePhoto(info), 'favorites/removePhoto');
+        dispatch(removePhoto(info, 'favorites/removePhoto'));
     };
 
     const handleOpen = (info) => {

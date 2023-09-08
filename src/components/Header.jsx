@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPhotosQuery } from "../features/searchSlice";
@@ -13,6 +13,8 @@ import { searchFavorites } from "../features/favoriteSlice";
 const Header = () => {
     const[search, setSearch] = useState('');
     const dispatch = useDispatch();
+    const location = useLocation();
+    const path = location.pathname;
 
     const handleOnChange = (e) => {
         const value = e.target.value;
@@ -20,14 +22,12 @@ const Header = () => {
     }
 
     useEffect(() => {
-        if (search.length !== 0 && search.length > 2) {
-            dispatch(getPhotosQuery(search));
-            dispatch(searchFavorites(search, 'favorites/searchFavorites'));
-        } else {
-            dispatch(getPhotosQuery(''));
-            dispatch(searchFavorites('', 'favorites/searchFavorites'));
-        }
-    }, [search, dispatch]);
+        if (path === '/') {
+            dispatch(getPhotosQuery(search, path)); 
+        } /* else {
+            dispatch(searchFavorites(search, 'favorites/searchFavorites')); 
+        } */
+    }, [search, path, dispatch]);
 
     return (
         <header className={styles.head}>
