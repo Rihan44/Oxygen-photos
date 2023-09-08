@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { getPhotosQuery } from "../features/searchSlice";
 
@@ -19,13 +19,15 @@ const Header = () => {
         setSearch(value);
     }
 
-    if (search.length !== 0 && search.length > 2) {
-        dispatch(getPhotosQuery(search))
-        dispatch(searchFavorites(search, 'favorites/searchFavorites'));
-    } else {
-        dispatch(getPhotosQuery(''))
-        dispatch(searchFavorites('', 'favorites/searchFavorites'));
-    }
+    useEffect(() => {
+        if (search.length !== 0 && search.length > 2) {
+            dispatch(getPhotosQuery(search));
+            dispatch(searchFavorites(search, 'favorites/searchFavorites'));
+        } else {
+            dispatch(getPhotosQuery(''));
+            dispatch(searchFavorites('', 'favorites/searchFavorites'));
+        }
+    }, [search, dispatch]);
 
     return (
         <header className={styles.head}>

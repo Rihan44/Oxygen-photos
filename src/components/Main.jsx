@@ -36,7 +36,6 @@ const Home = () => {
         return value;
     });
 
-
     const localFavs = localStorage.getItem('favs');
     const parseFavs = JSON.parse(localFavs) || [];
     const time = Date.now();
@@ -64,17 +63,23 @@ const Home = () => {
             };
         });
 
-        /* TODO QUE SE GUARDE UN OBJETO SOLO CON LOS DATOS NECESARIOS, ID, URL, DESCRIPCION, WIDTH, HEIGH Y FECHA */
         setFavoriteImages(updatedFavoriteImages);
 
         let btnFav = document.getElementsByClassName('btnFav');
         btnFav[index].setAttribute("disabled", updatedFavoriteImages[photo.urls.raw]);
 
-        const dateFav = {dateAdded: dateToday.toISOString().split('T')[0]};
+        const photoDataFilter = {
+            id: photo.id,
+            alt_description: photo.alt_description,
+            url: photo.urls.raw,
+            likes: photo.likes,
+            height: photo.height,
+            width: photo.width,
+            update_at: photo.updated_at,
+            dateAdded: dateToday.toISOString().split('T')[0]
+        }
 
-        const photoData = {...photo, ...dateFav};
-
-        dispatch(addPhoto(photoData,'favorites/addPhotos'));
+        dispatch(addPhoto(photoDataFilter,'favorites/addPhotos'));
     };
 
     const handleOpen = (info) => {

@@ -28,11 +28,7 @@ const MyFavs = () => {
     const [openAlert, setOpenAlert] = useState(false);
     const[description, setNewDescription] = useState('');
 
-    /* TODO FILTRAR POR DESCRIPCION */
     const dispatch = useDispatch();
-    /* const dataFav = useSelector((state) => state.favorites.data.dataFav);
-    const dataSearch = useSelector((state) => state.favorites.data.dataFavSearch) */
-
     const dataFav = useSelector((state) => {
         const favs = state.favorites.data.dataFav;
         const favSearch = state.favorites.data.dataFavSearch;
@@ -40,6 +36,7 @@ const MyFavs = () => {
         const value = favSearch?.length > 0 ? favSearch : favs;
         return value;
     });
+
 
     let contador = 0;
 
@@ -55,7 +52,7 @@ const MyFavs = () => {
         setNewDescription(e.target.value);
         setModalInfo(newDescription);
 
-       dispatch(changeDescription(newDescription,'favorites/addPhotos'));
+        dispatch(changeDescription(newDescription,'favorites/addPhotos'));
     }   
 
     const handleFav = (photo) => {
@@ -107,7 +104,7 @@ const MyFavs = () => {
                 >
                     <Box sx={styleModal}>
                         <div className={styles.modalMain}>
-                                <img className={styles.imgModal} src={modalInfo.urls?.raw} alt='image_data'/>
+                                <img className={styles.imgModal} src={modalInfo.url} alt='image_data'/>
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
                                     <div className={styles.modalInfo}>
                                         <div className={styles.modalInfoInput}>
@@ -155,7 +152,7 @@ const MyFavs = () => {
                 ? dataFav?.map((dataPhoto, index) => {
                         return (
                             <div key={dataPhoto.id + contador++} className={styles.photoBox}>
-                                <img src={dataPhoto.urls.raw} alt='image_fav' />
+                                <img src={dataPhoto.url} alt='image_fav' />
                                 <div className={styles.buttons}>
                                     <button>
                                         <DownloadIcon color="error" fontSize="medium" />

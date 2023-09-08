@@ -58,15 +58,39 @@ export const favoriteSlice = createSlice({
         },
         searchFavorites: (state, action) =>{
             if(action.type === 'favorites/searchFavorites'){
-                state.data.dataFavSearch = state.data.dataFav.filter(item => item.alt_description === action.payload);
-                const local = JSON.parse(localStorage.getItem('favs')) || [];     
+                /* ESTO HACE QUE NO SE ACTUALICE BIEN EL STATE */
+               state.data.dataFavSearch = state.data.dataFav.filter(
+                    photo => photo.alt_description.toLowerCase().includes(action.payload.toLowerCase())
+                );
 
-                console.log(local)
-                /* TODO MODIFICAR COMO SE METE EN EL LOCAL PORQUE LA DESCRIPTION ES EL SLUG EN EL LOCAL */
+                state.status = 'fulfilled';
+            }
+        },
+        filter: (state, action) => {
+            if(action.type === 'favorites/filter'){
+                
+                switch (action.payload) {
+                    case 'date':
+                        state.data.dataFavSearch = [...state.data.dataFav]; 
+                        state.data.dataFavSearch.sort((a, b) => a.date - b.date);
+                        break;
+                    case 'width':
+                        state.data.dataFavSearch = state.data.dataFav.filter(photo => photo.width === state.data.dataFav.width);
+                        break;
+                    case 'likes':
+                        state.data.dataFavSearch = state.data.dataFav.filter(photo => photo.likes === state.data.dataFav.likes);
+                        break;
+                    case 'height':
+                        state.data.dataFavSearch = state.data.dataFav.filter(photo => photo.height === state.data.dataFav.height);
+                        break;
+                    default:
+                        state.data.dataFavSearch = [...state.data.dataFav];
+                }
+        
                 state.status = 'fulfilled';
             }
         }
     }
 })
 
-export const {addPhoto, removePhoto, changeDescription, searchFavorites} = favoriteSlice.actions;
+export const {addPhoto, removePhoto, changeDescription, searchFavorites, filter} = favoriteSlice.actions;
