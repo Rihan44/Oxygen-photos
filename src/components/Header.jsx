@@ -1,13 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { getPhotosQuery } from "../features/searchSlice";
+import { getPhotosQuery } from "../features/search/searchSlice";
+import { searchFavorites } from "../features/favorites/favoriteSlice";
 
 import styles from '../styles/header.module.css';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Filters from "./Filters";
-import { searchFavorites } from "../features/favoriteSlice";
 
 
 const Header = () => {
@@ -24,9 +24,9 @@ const Header = () => {
     useEffect(() => {
         if (path === '/') {
             dispatch(getPhotosQuery(search, path)); 
-        } /* else {
+        }else if(path === '/MyFavs'){
             dispatch(searchFavorites(search, 'favorites/searchFavorites')); 
-        } */
+        } 
     }, [search, path, dispatch]);
 
     return (

@@ -17,8 +17,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector} from 'react-redux';
-import { getPhotos} from '../features/searchSlice.js';
-import { addPhoto } from '../features/favoriteSlice.js';
+import { getPhotos } from "../features/search/searchSlice";
+import { addPhoto } from '../features/favorites/favoriteSlice.js';
 
 
 const Home = () => {

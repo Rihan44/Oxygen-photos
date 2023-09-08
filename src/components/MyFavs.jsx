@@ -18,7 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeDescription, removePhoto, searchFavorites } from "../features/favoriteSlice";
+import { changeDescription, removePhoto, searchFavorites } from "../features/favorites/favoriteSlice";
 
 const MyFavs = () => {
 
@@ -27,26 +27,32 @@ const MyFavs = () => {
     const [modalInfo, setModalInfo] = useState({});
     const [openAlert, setOpenAlert] = useState(false);
     const[description, setNewDescription] = useState('');
+    const[myFavs, setMyFavs] = useState([]);
 
+    const status = useSelector((state) => state.favorites.data.status);
     const dispatch = useDispatch();
-    const dataFav = useSelector((state) => {
-        const favs = state.favorites.data.dataFav;
-        const favSearch = state.favorites.data.dataFavSearch;
-        
-        const value = favSearch?.length > 0 ? favSearch : favs;
-        return value;
-    });
-
-    console.log(dataFav);
-
+    const dataFav = useSelector((state) => state.favorites.data);
     let contador = 0;
 
     useEffect(() => {
-        if(dataFav.length === 0 || dataFav === undefined){
+        if(dataFav.length === 0){
             setData(false);
+        } else {
+            setData(true);
         }
 
-    }, [dataFav])
+        if(status === 'pending'){
+            console.log('Cargando... (cambiar por icono de carga)')
+        } else {
+            let dataPhotos = [];
+            dataFav.forEach(photo => {
+                dataPhotos.push(photo);
+            });
+    
+            setMyFavs(dataPhotos);
+        }
+
+    }, [status, dataFav])
 
     const handleOnChange = (e, info) => {
         const newDescription = { ...info, alt_description: e.target.value };
@@ -150,7 +156,7 @@ const MyFavs = () => {
                     </Alert>
                 </Snackbar>
             {data
-                ? dataFav?.map((dataPhoto, index) => {
+                ? myFavs?.map((dataPhoto, index) => {
                         return (
                             <div key={dataPhoto.id + contador++} className={styles.photoBox}>
                                 <img src={dataPhoto.url} alt='image_fav' />
@@ -173,12 +179,9 @@ const MyFavs = () => {
                 : <img src="/no-image.png" alt="no_imageFav"/> 
 
                 }
-            </div>
-            
+            </div>     
         </main>
-
     )
-
 }
 
 export default MyFavs;

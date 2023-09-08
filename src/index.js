@@ -7,21 +7,20 @@ import { Provider } from 'react-redux';
 import { store } from './app/store';
 import MyFavs from './components/MyFavs';
 import Header from './components/Header';
+import Home from './components/Main';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <Header/>
         <Routes>
-          <Route path="/" element={<App/>}/>
+          <Route path="/" element={<Home/>}/>
           <Route path="myFavs" element={<MyFavs/>}/>
           <Route path="myFavs:id" element={<MyFavs/>}/>
         </Routes>
       </BrowserRouter>
     </Provider>
-  </React.StrictMode>
 );
 

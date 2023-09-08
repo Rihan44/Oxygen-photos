@@ -7,7 +7,7 @@ import CollectionsIcon from '@mui/icons-material/Collections';
 import styles from '../styles/header.module.css';
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { filter } from "../features/favoriteSlice";
+import { filter } from "../features/favorites/favoriteSlice";
 
 const Filters = () => {
 
@@ -21,15 +21,36 @@ const Filters = () => {
         dispatch(filter(filters, 'favorites/filter'));
     }
 
-  /*   if(filters !== ''){
+    if(filters !== ''){
         dispatch(filter(filters, 'favorites/filter'));
-    } */
-/* 
+    } 
+
     useEffect(() => {
         if(filters !== ''){
             dispatch(filter(filters, 'favorites/filter'));
         }
-    },[dispatch]) */
+    },[filters, dispatch])
+
+    /* ESTO VA EN FILTERS PORQUE LA LOGICA SE MODIFICA EN EL STATE */
+               /*  switch (action.payload) {
+                    case 'date':
+                        state.data.dataFavSearch = [...state.data.dataFav]; 
+                        state.data.dataFavSearch.sort((a, b) => a.date - b.date);
+                        break;
+                    case 'width':
+                        state.data.dataFavSearch = state.data.dataFav.filter(photo => photo.width === state.data.dataFav.width);
+                        break;
+                    case 'likes':
+                        state.data.dataFavSearch = state.data.dataFav.filter(photo => photo.likes === state.data.dataFav.likes);
+                        break;
+                    case 'height':
+                        state.data.dataFavSearch = state.data.dataFav.filter(photo => photo.height === state.data.dataFav.height);
+                        break;
+                    default:
+                        state.data.dataFavSearch = [...state.data.dataFav];
+                }
+        
+                state.status = 'fulfilled'; */
 
 
     return (
