@@ -13,10 +13,12 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Alert from '@mui/material/Alert';
+import TextField from '@mui/material/TextField';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removePhoto } from "../features/favoriteSlice";
+import { changeDescription, removePhoto, searchFavorites } from "../features/favoriteSlice";
 
 const MyFavs = () => {
 
@@ -24,9 +26,20 @@ const MyFavs = () => {
     const [open, setOpen] = useState(false);
     const [modalInfo, setModalInfo] = useState({});
     const [openAlert, setOpenAlert] = useState(false);
+    const[description, setNewDescription] = useState('');
 
+    /* TODO FILTRAR POR DESCRIPCION */
     const dispatch = useDispatch();
-    const dataFav = useSelector((state) => state.favorites.data);
+    /* const dataFav = useSelector((state) => state.favorites.data.dataFav);
+    const dataSearch = useSelector((state) => state.favorites.data.dataFavSearch) */
+
+    const dataFav = useSelector((state) => {
+        const favs = state.favorites.data.dataFav;
+        const favSearch = state.favorites.data.dataFavSearch;
+        
+        const value = favSearch?.length > 0 ? favSearch : favs;
+        return value;
+    });
 
     let contador = 0;
 
@@ -34,22 +47,31 @@ const MyFavs = () => {
         if(dataFav.length === 0 || dataFav === undefined){
             setData(false);
         }
+
     }, [dataFav])
 
-    const handleFav = (photo, index) => {
-        /* TODO AL BORRAR QUE SE BORRE DEL LOCAL */
+    const handleOnChange = (e, info) => {
+        const newDescription = { ...info, alt_description: e.target.value };
+        setNewDescription(e.target.value);
+        setModalInfo(newDescription);
+
+       dispatch(changeDescription(newDescription,'favorites/addPhotos'));
+    }   
+
+    const handleFav = (photo) => {
         setOpenAlert(true);
-        const info = {id: photo.id, index: index};
+        const info = {id: photo.id};
+
         dispatch(removePhoto(info), 'favorites/removePhoto');
     };
 
     const handleOpen = (info) => {
         setOpen(true);
         setModalInfo(info);
+        setNewDescription(info.alt_description)
     };
 
     const handleClose = () => setOpen(false);
-
 
     const styleModal = {
         position: 'absolute',
@@ -87,7 +109,17 @@ const MyFavs = () => {
                         <div className={styles.modalMain}>
                                 <img className={styles.imgModal} src={modalInfo.urls?.raw} alt='image_data'/>
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    {modalInfo.alt_description}
+                                    <div className={styles.modalInfo}>
+                                        <div className={styles.modalInfoInput}>
+                                            <EditIcon/>
+                                            <TextField 
+                                                value={description} 
+                                                onChange={(e) => handleOnChange(e, modalInfo)}
+                                                className={styles.modalInput} 
+                                                placeholder="Search description" 
+                                            />
+                                        </div>  
+                                    </div>
                                 </Typography>
                                 <div className={styles.modalInfo}>
                                     <div className={styles.modalInfoBox}>
@@ -104,7 +136,7 @@ const MyFavs = () => {
                                     </div>
                                     <div className={styles.modalInfoBox}>
                                         <DateRangeIcon style={{marginLeft: '15px'}} fontSize="medium"/>
-                                        <p>{modalInfo.updated_at?.split('T')[0]}</p>
+                                        <p>{modalInfo.dateAdded}</p>
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +161,7 @@ const MyFavs = () => {
                                         <DownloadIcon color="error" fontSize="medium" />
                                     </button>
                                     <div>
-                                        <button onClick={() => handleFav(dataPhoto, index)}>
+                                        <button onClick={() => handleFav(dataPhoto)}>
                                             <BookmarkIcon color='error' fontSize="medium" /> 
                                         </button>
                                         <button onClick={() => handleOpen(dataPhoto)}>

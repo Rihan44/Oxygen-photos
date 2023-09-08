@@ -17,7 +17,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector} from 'react-redux';
-import { getPhotos } from '../features/searchSlice.js';
+import { getPhotos} from '../features/searchSlice.js';
 import { addPhoto } from '../features/favoriteSlice.js';
 
 
@@ -28,12 +28,24 @@ const Home = () => {
     const [favoriteImages, setFavoriteImages] = useState({});
 
     const dispatch = useDispatch();
-    const dataPhotos = useSelector((state) => state.search.data);
+    const dataPhotos = useSelector((state) => {
+        const allPhotos = state.search.data.getAllPhoto;
+        const queryPhotos = state.search.data.getByQuery;
+        
+        const value = queryPhotos.length > 0 ? queryPhotos : allPhotos;
+        return value;
+    });
+
+
     const localFavs = localStorage.getItem('favs');
     const parseFavs = JSON.parse(localFavs) || [];
-
+    const time = Date.now();
+    const dateToday = new Date(time);
     let contador = 0;
 
+    if (dataPhotos.length === 0) {
+        dispatch(getPhotos());
+    }
 
     useEffect(() => {
         if (dataPhotos.length === 0) {
@@ -44,7 +56,6 @@ const Home = () => {
 
 
     const handleToggleFavorite = (photo, index) => {
-        /* TODO GUARDAR FECHA DE CUANDO SE DA FAVORITO */
         setOpenAlert(true);
         const updatedFavoriteImages = ((prevFavorites) => {
             return {
@@ -53,12 +64,17 @@ const Home = () => {
             };
         });
 
+        /* TODO QUE SE GUARDE UN OBJETO SOLO CON LOS DATOS NECESARIOS, ID, URL, DESCRIPCION, WIDTH, HEIGH Y FECHA */
         setFavoriteImages(updatedFavoriteImages);
 
         let btnFav = document.getElementsByClassName('btnFav');
         btnFav[index].setAttribute("disabled", updatedFavoriteImages[photo.urls.raw]);
 
-        dispatch(addPhoto(photo,'favorites/addPhotos'));
+        const dateFav = {dateAdded: dateToday.toISOString().split('T')[0]};
+
+        const photoData = {...photo, ...dateFav};
+
+        dispatch(addPhoto(photoData,'favorites/addPhotos'));
     };
 
     const handleOpen = (info) => {
