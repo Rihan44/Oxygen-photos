@@ -18,7 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeDescription, removePhoto, searchFavorites } from "../features/favorites/favoriteSlice";
+import { changeDescription, removePhoto } from "../features/favorites/favoriteSlice";
 
 const MyFavs = () => {
 
@@ -42,7 +42,7 @@ const MyFavs = () => {
         }
 
         if(status === 'pending'){
-            console.log('Cargando... (cambiar por icono de carga)')
+            console.log('Cargando... (cambiar por icono de carga)');
         } else {
             let dataPhotos = [];
             dataFav.forEach(photo => {

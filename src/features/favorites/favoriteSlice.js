@@ -14,7 +14,7 @@ export const favoriteSlice = createSlice({
             state.data = [...state.data, action.payload];
             local.push(action.payload);
             localStorage.setItem('favs', JSON.stringify(local));
-            state.status = 'fullfilled';
+            state.status = 'fulfilled';
             state.status = "rejected";
         },
         removePhoto: (state, action) => {
@@ -59,8 +59,34 @@ export const favoriteSlice = createSlice({
             }
             state.status = 'fulfilled';
         },
+        filtersReduce: (state, action) =>{
+            const local = JSON.parse(localStorage.getItem('favs')) || [];
+
+            switch (action.payload) {
+                case 'date':
+                    state.data = state.data.sort((a, b) => b.dateAdded - a.dateAdded);
+                    break;
+                case 'width':
+                    state.data = state.data.sort((a, b) => b.width - a.width);
+                    break;
+                case 'likes':
+                    state.data = state.data.sort((a, b) => b.likes - a.likes);
+                    break;
+                case 'height':
+                    state.data = state.data.sort((a, b) => b.height - a.height);
+                    break;
+                default:
+                    if (local.length > 0) {
+                        state.data = local;
+                    } else {
+                        state.data = [];
+                    }     
+            }
+            state.status = 'fulfilled';
+
+        }
 
     }
 })
 
-export const { addPhoto, removePhoto, changeDescription, searchFavorites, filter } = favoriteSlice.actions;
+export const { addPhoto, removePhoto, changeDescription, searchFavorites, filtersReduce } = favoriteSlice.actions;

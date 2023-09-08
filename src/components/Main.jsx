@@ -22,37 +22,38 @@ import { addPhoto } from '../features/favorites/favoriteSlice.js';
 
 
 const Home = () => {
-    const [open, setOpen] = useState(false);
-    const [modalInfo, setModalInfo] = useState({}); 
-    const [openAlert, setOpenAlert] = useState(false);
-    const [favoriteImages, setFavoriteImages] = useState({});
+    const[open, setOpen] = useState(false);
+    const[modalInfo, setModalInfo] = useState({}); 
+    const[openAlert, setOpenAlert] = useState(false);
+    const[favoriteImages, setFavoriteImages] = useState({});
+    const[data, setData] = useState([]);
 
+    const status = useSelector((state) => state.status);
+    const dataPhotos = useSelector((state) => state.search.data);
     const dispatch = useDispatch();
-    const dataPhotos = useSelector((state) => {
-        const allPhotos = state.search.data.getAllPhoto;
-        const queryPhotos = state.search.data.getByQuery;
-        
-        const value = queryPhotos.length > 0 ? queryPhotos : allPhotos;
-        return value;
-    });
-
     const localFavs = localStorage.getItem('favs');
     const parseFavs = JSON.parse(localFavs) || [];
     const time = Date.now();
     const dateToday = new Date(time);
     let contador = 0;
 
-    if (dataPhotos.length === 0) {
-        dispatch(getPhotos());
-    }
-
     useEffect(() => {
         if (dataPhotos.length === 0) {
             dispatch(getPhotos());
         }
 
-    }, [dataPhotos.length, dispatch]);
+        if(status === 'pending'){
+            console.log('Cargando... (cambiar por icono de carga)');
+        } else {
+            let datas = [];
+            dataPhotos.forEach(photo => {
+                datas.push(photo);
+            });
+    
+            setData(datas);
+        }
 
+    }, [dataPhotos.length, dispatch, dataPhotos, status]);
 
     const handleToggleFavorite = (photo, index) => {
         setOpenAlert(true);
@@ -165,7 +166,7 @@ const Home = () => {
                         >Added to favs!
                     </Alert>
                 </Snackbar>
-               {dataPhotos.map((data, index) => {
+               {data.map((data, index) => {
                     const favControler = parseFavs?.some(fav => fav.id === data.id);
                     const isFavorite = favoriteImages[data.urls.raw];
                     return (

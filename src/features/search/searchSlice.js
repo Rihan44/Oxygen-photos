@@ -4,10 +4,11 @@ import { getAllPhotos, getPhotosByQuery } from "./searchThunk";
 export const searchSlice = createSlice({
     name: "search",
     initialState: {
-        data: {
+        /* data: {
             getAllPhoto: [],
             getByQuery: []
-        },
+        }, */
+        data: [],
         status: 'idle',
         error: null
     },
@@ -15,7 +16,7 @@ export const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getAllPhotos.fulfilled, (state, action) => {
             state.status = "fulfilled";
-            state.data.getAllPhoto = [...action.payload];
+            state.data = [...action.payload];
         })
         .addCase(getAllPhotos.pending, (state) => {state.status = "pending"})
         .addCase(getAllPhotos.rejected, (state, action) => {
@@ -24,7 +25,7 @@ export const searchSlice = createSlice({
         })
         .addCase(getPhotosByQuery.fulfilled, (state, action)=> {
             state.status = "fulfilled";
-            state.data.getByQuery = [...action.payload];
+            state.data = [...action.payload];
         })
         .addCase(getPhotosByQuery.pending, (state) => {state.status = "pending"})
         .addCase(getPhotosByQuery.rejected, (state, action) => {
