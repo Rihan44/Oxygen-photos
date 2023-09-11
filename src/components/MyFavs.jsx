@@ -77,21 +77,6 @@ const MyFavs = () => {
 
     const handleClose = () => setOpen(false);
 
-    const styleModal = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 250,
-        height: 'auto',
-        bgcolor: '#F2E2DE',
-        color: '#EB3223',
-        border: '1px solid #000',
-        borderRadius: '10px',
-        boxShadow: 24,
-        p: 4,
-    };
-
     const alertStyle = {
         width: '70%',
         position: 'absolute',

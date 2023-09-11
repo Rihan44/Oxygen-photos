@@ -56,6 +56,7 @@ const Home = () => {
 
     const handleToggleFavorite = (photo, index) => {
         setOpenAlert(true);
+
         const updatedFavoriteImages = ((prevFavorites) => {
             return {
                 ...prevFavorites,
@@ -76,7 +77,8 @@ const Home = () => {
             height: photo.height,
             width: photo.width,
             update_at: photo.updated_at,
-            dateAdded: dateToday.toISOString().split('T')[0]
+            dateAdded: dateToday.toISOString().split('T')[0],
+            isAdded: true
         }
 
         dispatch(addPhoto(photoDataFilter,'favorites/addPhotos'));
@@ -161,6 +163,7 @@ const Home = () => {
                                     <DownloadIcon color="error" fontSize="medium" />
                                 </button>
                                 <div>
+                                {/* TODO NO DESACTIVAR SI NO CAMBIAR EL FAV CONTROLER SOLO SI ES FAV */}
                                     <button className='btnFav' onClick={() => handleToggleFavorite(data, index)} disabled={favControler}>
                                         {
                                             favControler
