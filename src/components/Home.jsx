@@ -5,11 +5,9 @@ import DownloadIcon from '@mui/icons-material/Download';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
-import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
 import HeightIcon from '@mui/icons-material/Height';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -17,18 +15,20 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { useEffect, useState } from 'react';
 import { useDispatch,useSelector} from 'react-redux';
-import { getPhotos } from "../features/search/searchSlice";
+import { getPhotos } from "../features/search/searchSlice.js";
 import { addPhoto } from '../features/favorites/favoriteSlice.js';
+import { AlertModal } from './AlertModal.jsx';
 
-const Home = () => {
+export const Home = () => {
     const[open, setOpen] = useState(false);
     const[modalInfo, setModalInfo] = useState({}); 
     const[openAlert, setOpenAlert] = useState(false);
     const[favoriteImages, setFavoriteImages] = useState({});
     const[data, setData] = useState([]);
 
-    const status = useSelector((state) => state.status);
+    const status = useSelector((state) => state.search.status);
     const dataPhotos = useSelector((state) => state.search.data);
+
     const dispatch = useDispatch();
     const localFavs = localStorage.getItem('favs');
     const parseFavs = JSON.parse(localFavs) || [];
@@ -37,12 +37,9 @@ const Home = () => {
     let contador = 0;
 
     useEffect(() => {
-        if (dataPhotos.length === 0) {
-            dispatch(getPhotos());
-        }
 
         if(status === 'pending'){
-            console.log('Cargando... (cambiar por icono de carga)');
+            dispatch(getPhotos());
         } else {
             let datas = [];
             dataPhotos.forEach(photo => {
@@ -54,20 +51,17 @@ const Home = () => {
 
     }, [dataPhotos.length, dispatch, dataPhotos, status]);
 
-    const handleToggleFavorite = (photo, index) => {
+    const handleToggleFavorite = (photo) => {
         setOpenAlert(true);
 
         const updatedFavoriteImages = ((prevFavorites) => {
             return {
                 ...prevFavorites,
-                [photo.urls.raw]: !prevFavorites[photo.urls.raw]
+                [photo.urls.regular]: !prevFavorites[photo.urls.regular]
             };
         });
 
         setFavoriteImages(updatedFavoriteImages);
-
-        let btnFav = document.getElementsByClassName('btnFav');
-        btnFav[index].setAttribute("disabled", updatedFavoriteImages[photo.urls.raw]);
 
         const photoDataFilter = {
             id: photo.id,
@@ -81,7 +75,8 @@ const Home = () => {
             isAdded: true
         }
 
-        dispatch(addPhoto(photoDataFilter,'favorites/addPhotos'));
+        dispatch(addPhoto(photoDataFilter)); 
+
     };
 
     const handleOpen = (info) => {
@@ -99,15 +94,9 @@ const Home = () => {
         link.click();
     }
 
-    const alertStyle = {
-        width: '50%',
-        position: 'absolute',
-        top: '-300px',
-        left: '20%'
-    }
-
     return (
         <main className={styles.main}>
+            { status === 'pending' ? <div className={styles.loader}></div> : <></> }
             <Title title="Home" styles={styles.title} />
             <div className={styles.photosMain}>
                 <Modal
@@ -118,7 +107,7 @@ const Home = () => {
                 >
                     <Box className={styles.styleModalBox}>
                         <div className={styles.modalMain}>
-                            <img className={styles.imgModal} src={modalInfo.urls?.raw} alt='image_data'/>
+                            <img className={styles.imgModal} src={modalInfo.urls?.regular} alt='image_data'/>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 {modalInfo.alt_description}
                             </Typography>
@@ -143,28 +132,24 @@ const Home = () => {
                         </div>
                     </Box>
                 </Modal>
-                <Snackbar style={{width: '100%'}} open={openAlert} autoHideDuration={1000} onClose={handleClose}>
-                    <Alert
-                        sx={alertStyle}
-                        severity="success"
-                        color="error"
-                        onClose={() => { setOpenAlert(false) }}
-                        >Added to favs!
-                    </Alert>
-                </Snackbar>
-               {data.map((data, index) => {
+                <AlertModal 
+                    alertContent='Added to favs!' 
+                    openAlert={openAlert}
+                    onClose={handleClose}
+                    setOpenAlert={() => setOpenAlert(false)}
+                /> 
+               {data.map((data) => {
                     const favControler = parseFavs?.some(fav => fav.id === data.id);
                     const isFavorite = favoriteImages[data.urls.raw];
                     return (
                         <div key={data.id + contador++} className={styles.photoBox}>
-                            <img src={data.urls.raw} alt='image_Data' />
+                            <img src={data.urls.regular} alt='image_Data' />
                             <div className={styles.buttons}>
                                 <button onClick={() => handleDownload(data)}>
                                     <DownloadIcon color="error" fontSize="medium" />
                                 </button>
                                 <div>
-                                {/* TODO NO DESACTIVAR SI NO CAMBIAR EL FAV CONTROLER SOLO SI ES FAV */}
-                                    <button className='btnFav' onClick={() => handleToggleFavorite(data, index)} disabled={favControler}>
+                                    <button className='btnFav' onClick={() => handleToggleFavorite(data)} disabled={favControler}>
                                         {
                                             favControler
                                             ? (<BookmarkIcon color='error' fontSize="medium" /> ) 
@@ -185,5 +170,3 @@ const Home = () => {
         </main>
     )
 }
-
-export default Home;

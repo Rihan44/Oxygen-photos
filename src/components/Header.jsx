@@ -9,7 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Filters from "./Filters";
 
-const Header = () => {
+export const Header = () => {
     const[search, setSearch] = useState('');
     const dispatch = useDispatch();
     const location = useLocation();
@@ -41,5 +41,3 @@ const Header = () => {
         </header>
     )
 }
-
-export default Header;

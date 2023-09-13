@@ -12,7 +12,7 @@ export const searchSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(getAllPhotos.fulfilled, (state, action) => {
             state.status = "fulfilled";
-            state.data = [...action.payload];
+            state.data = [...state.data,...action.payload];
         })
         .addCase(getAllPhotos.pending, (state) => {state.status = "pending"})
         .addCase(getAllPhotos.rejected, (state, action) => {

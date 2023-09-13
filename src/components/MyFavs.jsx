@@ -7,20 +7,19 @@ import ZoomOutMapIcon from '@mui/icons-material/ZoomOutMap';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
 import HeightIcon from '@mui/icons-material/Height';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDescription, removePhoto } from "../features/favorites/favoriteSlice";
+import { AlertModal } from "./AlertModal";
 
-const MyFavs = () => {
+export const MyFavs = () => {
 
     const[data, setData] = useState(true);
     const [open, setOpen] = useState(false);
@@ -29,25 +28,21 @@ const MyFavs = () => {
     const[description, setNewDescription] = useState('');
     const[myFavs, setMyFavs] = useState([]);
 
-    const status = useSelector((state) => state.favorites.data.status);
     const dispatch = useDispatch();
+    const status = useSelector((state) => state.favorites.status);
     const dataFav = useSelector((state) => state.favorites.data);
     let contador = 0;
 
     useEffect(() => {
-        if(dataFav.length === 0){
-            setData(false);
-        } else {
-            setData(true);
-        }
 
         if(status === 'pending'){
-            console.log('Cargando... (cambiar por icono de carga)');
+            setData(false);
         } else {
             let dataPhotos = [];
             dataFav.forEach(photo => {
                 dataPhotos.push(photo);
             });
+            setData(true);
     
             setMyFavs(dataPhotos);
         }
@@ -59,14 +54,14 @@ const MyFavs = () => {
         setNewDescription(e.target.value);
         setModalInfo(newDescription);
 
-        dispatch(changeDescription(newDescription,'favorites/addPhotos'));
+        dispatch(changeDescription(newDescription));
     }   
 
     const handleFav = (photo) => {
         setOpenAlert(true);
         const info = {id: photo.id};
 
-        dispatch(removePhoto(info, 'favorites/removePhoto'));
+        dispatch(removePhoto(info));
     };
 
     const handleOpen = (info) => {
@@ -77,15 +72,9 @@ const MyFavs = () => {
 
     const handleClose = () => setOpen(false);
 
-    const alertStyle = {
-        width: '70%',
-        position: 'absolute',
-        top: '-300px',
-        left: '10%'
-    }
-
     return(
         <main className={styles.main}>
+            { status === 'pending' ? <div className={styles.loader}></div> : <></> }
             {data ? <Title styles={styles.title} title="My Collection"/> : <Title styles={styles.title} title="You haven't added anything to favorites yet"/>}
             <div className={styles.photosMain}>
                 <Modal
@@ -131,17 +120,14 @@ const MyFavs = () => {
                             </div>
                     </Box>
                 </Modal>
-                <Snackbar style={{width: '100%'}} open={openAlert} autoHideDuration={1000} onClose={handleClose}>
-                    <Alert
-                        sx={alertStyle}
-                        severity="success"
-                        color="error"
-                        onClose={() => { setOpenAlert(false) }}
-                        >Removed from favs!
-                    </Alert>
-                </Snackbar>
+                <AlertModal 
+                    alertContent='Removed from favs!' 
+                    openAlert={openAlert}
+                    onClose={handleClose}
+                    setOpenAlert={() => setOpenAlert(false)}
+                /> 
             {data
-                ? myFavs?.map((dataPhoto, index) => {
+                ? myFavs?.map((dataPhoto) => {
                         return (
                             <div key={dataPhoto.id + contador++} className={styles.photoBox}>
                                 <img src={dataPhoto.url} alt='image_fav' />
@@ -168,5 +154,3 @@ const MyFavs = () => {
         </main>
     )
 }
-
-export default MyFavs;
