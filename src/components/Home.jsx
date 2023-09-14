@@ -57,7 +57,7 @@ export const Home = () => {
         const updatedFavoriteImages = ((prevFavorites) => {
             return {
                 ...prevFavorites,
-                [photo.urls.regular]: !prevFavorites[photo.urls.regular]
+                [photo.id]: !prevFavorites[photo.id]
             };
         });
 
@@ -140,7 +140,7 @@ export const Home = () => {
                 /> 
                {data.map((data) => {
                     const favControler = parseFavs?.some(fav => fav.id === data.id);
-                    const isFavorite = favoriteImages[data.urls.raw];
+                    const isFavorite = favoriteImages[data.id];
                     return (
                         <div key={data.id + contador++} className={styles.photoBox}>
                             <img src={data.urls.regular} alt='image_Data' />

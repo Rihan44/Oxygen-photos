@@ -24,7 +24,7 @@ export const Header = () => {
         if (path === '/') {
             dispatch(getPhotosQuery(search, path)); 
         }else if(path === '/MyFavs'){
-            dispatch(searchFavorites(search, 'favorites/searchFavorites')); 
+            dispatch(searchFavorites(search)); 
         } 
     }, [search, path, dispatch]);
 
