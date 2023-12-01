@@ -1,4 +1,5 @@
 import {configureStore} from "@reduxjs/toolkit";
+
 import { favoriteSlice } from "../features/favorites/favoriteSlice";
 import {searchSlice} from "../features/search/searchSlice.js";
 

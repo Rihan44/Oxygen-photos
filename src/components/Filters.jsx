@@ -51,7 +51,8 @@ const Filters = () => {
                 </Select>
             </FormControl> : <></> }
             <Link to={'MyFavs'}>
-                <CollectionsIcon className={styles.favs} color="error" fontSize="medium" />
+                {/* <CollectionsIcon className={styles.favs} color="error" fontSize="medium" /> */}
+                <p className={styles.favs} style={{textDecoration: 'none'}}>My Collection</p>
             </Link>       
         </div>
     )

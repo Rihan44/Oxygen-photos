@@ -15,7 +15,6 @@ export const favoriteSlice = createSlice({
             local.push(action.payload);
             localStorage.setItem('favs', JSON.stringify(local));
             state.status = 'fulfilled';
-            state.status = "rejected";
         },
         removePhoto: (state, action) => {
             const local = JSON.parse(localStorage.getItem('favs')) || [];
