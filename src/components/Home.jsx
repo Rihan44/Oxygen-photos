@@ -18,6 +18,7 @@ import { useDispatch,useSelector} from 'react-redux';
 import { getPhotos } from "../features/search/searchSlice.js";
 import { addPhoto } from '../features/favorites/favoriteSlice.js';
 import { AlertModal } from './AlertModal.jsx';
+import { saveAs } from 'file-saver';
 
 export const Home = () => {
     const[open, setOpen] = useState(false);
@@ -87,11 +88,19 @@ export const Home = () => {
     const handleClose = () => setOpen(false);
 
     const handleDownload = (src) => {
-        const link = document.createElement('a');
-        link.href = src.links.download;
-        link.download = 'imageUnplash.png';
-        link.target = '_blank';
-        link.click();
+        // data.urls.full
+        // const link = document.createElement('a');
+        // link.href = src.links.download;
+        // link.download = 'imageUnplash.png';
+        // link.target = '_blank';
+        // link.click();
+        const url = src.urls.full;
+
+        fetch(url)
+            .then(response => response.blob())
+            .then((blob) => {
+                saveAs(blob, src.alt_description)
+            })
     }
 
     return (
