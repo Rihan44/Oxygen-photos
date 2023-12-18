@@ -1,5 +1,3 @@
-import styles from '../styles/general.module.css';
-
 
 const Title = ({title, styles}) => {
 
