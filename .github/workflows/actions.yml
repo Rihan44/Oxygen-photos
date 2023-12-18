@@ -13,7 +13,7 @@ jobs:
     - uses: jakejarvis/s3-sync-action@master
     - uses: Install dependencies
       run: npm i 
-    -uses: Run build 
+    - uses: Run build 
       run: npm run build
       env: 
         CI: false
