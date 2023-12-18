@@ -88,12 +88,6 @@ export const Home = () => {
     const handleClose = () => setOpen(false);
 
     const handleDownload = (src) => {
-        // data.urls.full
-        // const link = document.createElement('a');
-        // link.href = src.links.download;
-        // link.download = 'imageUnplash.png';
-        // link.target = '_blank';
-        // link.click();
         const url = src.urls.full;
 
         fetch(url)
