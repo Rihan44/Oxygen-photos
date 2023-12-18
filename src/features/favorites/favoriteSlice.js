@@ -51,7 +51,7 @@ export const favoriteSlice = createSlice({
             const query = action.payload.toLowerCase();
             if (query !== '') {
                 state.data = local.filter(
-                    photo => photo.alt_description.toLowerCase().includes(query)
+                    photo => photo.alt_description?.toLowerCase().includes(query)
                 );
             } else {
                 state.data = local;
